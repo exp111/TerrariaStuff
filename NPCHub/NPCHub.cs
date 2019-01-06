@@ -38,6 +38,7 @@ namespace NPCHub
 				_npcHubInterface.Update(gameTime);
 			}
 		}
+
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
