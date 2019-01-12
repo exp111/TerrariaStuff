@@ -22,19 +22,19 @@ namespace FasterOldOnesArmy.Tiles
 			if (DD2Event.EnemySpawningIsOnHold)
 			{
 				Main.NewText("Skipped!", Colors.CoinGold);
-				DD2Event.TimeLeftBetweenWaves = 0;
+				DD2Event.TimeLeftBetweenWaves = 1;
 				return;
 			}
 
-			if (Terraria.GameContent.Events.DD2Event.LaneSpawnRate >= 5)
+			if (DD2Event.LaneSpawnRate >= 90)
 			{
-				Terraria.GameContent.Events.DD2Event.LaneSpawnRate = 1;
+				DD2Event.LaneSpawnRate = 10;
 			}
 			else
 			{
-				Terraria.GameContent.Events.DD2Event.LaneSpawnRate += 1;
+				DD2Event.LaneSpawnRate += 10;
 			}
-			Main.NewText(string.Format("Spawn rate set to {0}", Terraria.GameContent.Events.DD2Event.LaneSpawnRate), Colors.CoinGold);
+			Main.NewText(string.Format("Spawn rate set to {0}", DD2Event.LaneSpawnRate), Colors.CoinGold);
 		}
 	}
 }
