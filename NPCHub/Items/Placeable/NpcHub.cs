@@ -29,6 +29,8 @@ namespace NPCHub.Items.Placeable
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.DirtBlock, 10);
+			//recipe.AddIngredient(ItemID.KingStatue);
+			//recipe.AddIngredient(ItemID.QueenStatue);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

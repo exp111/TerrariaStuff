@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace NPCHub.UI
@@ -82,7 +83,7 @@ namespace NPCHub.UI
 		{
 			if (!searched)
 			{
-				npcs = Main.npc.Where(npc => npc.active && npc.townNPC && NPC.TypeToHeadIndex(npc.type) != -1).OrderBy(npc => npc.FullName).Select(n => new NPCWithIndex{npc = n, headIndex = NPC.TypeToHeadIndex(n.type)}).ToList();
+				npcs = Main.npc.Where(npc => npc.active && npc.townNPC && NPC.TypeToHeadIndex(npc.type) != -1).OrderBy(npc => npc.TypeName).Select(n => new NPCWithIndex{npc = n, headIndex = NPC.TypeToHeadIndex(n.type)}).ToList();
 				searched = true;
 			}
 			// Don't delete this or the UIElements attached to this UIState will cease to function.

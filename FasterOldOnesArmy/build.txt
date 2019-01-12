@@ -1,0 +1,3 @@
+author = exp111
+version = 1.0
+displayName = Faster Old One's Army
