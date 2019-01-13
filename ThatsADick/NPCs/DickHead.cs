@@ -45,6 +45,7 @@ namespace ThatsADick.NPCs
 		}
 	}
 
+	[AutoloadBossHead]
 	class DickHead : DickPart
 	{
 		public override void SetDefaults()
@@ -79,7 +80,7 @@ namespace ThatsADick.NPCs
 
 		private void ShootProjectile()
 		{
-
+			//TODO: shoot projectile
 		}
 
 		private void OnSpawn()

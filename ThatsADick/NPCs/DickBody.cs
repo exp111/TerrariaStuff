@@ -24,6 +24,7 @@ namespace ThatsADick.NPCs
 		{
 			base.AI();
 
+			// Check if parent is still alive -> die otherwise
 			if (!Main.npc[(int)npc.ai[1]].active)
 			{
 				npc.life = 0;
