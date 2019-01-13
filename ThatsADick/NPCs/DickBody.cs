@@ -33,6 +33,8 @@ namespace ThatsADick.NPCs
 				npc.active = false;
 				NetMessage.SendData(28, -1, -1, null, npc.whoAmI, -1f, 0.0f, 0.0f, 0, 0, 0);
 			}
+
+			//TODO: if destroyer style -> keep alive till head dies
 		}
 
 		public override bool CheckActive()
@@ -42,7 +44,7 @@ namespace ThatsADick.NPCs
 
 		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
 		{
-			return false;
+			return false; // TODO: if destroyer style then delete this
 		}
 	}
 

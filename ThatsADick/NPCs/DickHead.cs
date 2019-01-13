@@ -11,6 +11,7 @@ namespace ThatsADick.NPCs
 {
 	public abstract class DickPart : ModNPC
 	{
+		public const int Segments = 25;
 		public bool JustSpawned = true;
 
 		public const string bossName = "Eater of Dicks";
@@ -21,7 +22,7 @@ namespace ThatsADick.NPCs
 
 		public override void SetDefaults()
 		{
-			npc.width = 38;
+			npc.width = 38; //TODO: check if width & height is ok (copied from eow)
 			npc.height = 38;
 			npc.aiStyle = 6;
 			npc.netAlways = true;
@@ -54,9 +55,9 @@ namespace ThatsADick.NPCs
 
 			npc.boss = true;
 
-			npc.npcSlots = 5f;
+			npc.npcSlots = 5f; // what's this for?
 
-			npc.damage = 22;
+			npc.damage = 22; // TODO: Change dmg, defense & life
 			npc.defense = 2;
 			npc.lifeMax = 65;
 		}
@@ -64,13 +65,20 @@ namespace ThatsADick.NPCs
 		public override void NPCLoot()
 		{
 			MWorld.downedDick = true;
-			Main.NewText("NPC Loot");
+			//TODO: drop loot in NPCLoot?
+		}
+
+		public override void BossLoot(ref string name, ref int potionType)
+		{
+			potionType = ItemID.HealingPotion;
+			//TODO: drop loot in BossLoot?
 		}
 
 		public override void AI()
 		{
 			base.AI();
 
+			//TODO: if destroyer style: check if every segment is ded -> die
 			if (JustSpawned)
 			{
 				OnSpawn();
@@ -80,17 +88,16 @@ namespace ThatsADick.NPCs
 
 		private void ShootProjectile()
 		{
-			//TODO: shoot projectile
+			//TODO: shoot projectile (onhit: slowed debuff)
 		}
 
 		private void OnSpawn()
 		{
 			int previous = npc.whoAmI;
-			const int segments = 25;
 
-			for (int i = 0; i < segments; i++)
+			for (int i = 0; i < Segments; i++)
 			{
-				int type = i < segments - 1 // Last part?
+				int type = i < Segments - 1 // Last part?
 						? mod.NPCType<DickBody>()
 						: mod.NPCType<DickTail>();
 
