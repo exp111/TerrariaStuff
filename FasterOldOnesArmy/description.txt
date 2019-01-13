@@ -2,3 +2,4 @@ Sick of waiting for the next wave to start? Just want the enemies to spawn faste
 Just right click the Eternia Crystal Stand while the Old One's Army Event is ongoing to skip/change the spawn rate.
 
 Note: Lower Spawn Rate means faster spawns. Spawn Rate gets reset after each wave. Minimum is currently 10 (because it won't end wave 6 properly if the spawn rate is lower).
+I haven't tested the mod in mp yet. So use it there on your own risk I guess?

@@ -1,0 +1,3 @@
+author = exp111
+version = 0.1
+displayName = That's a dick
