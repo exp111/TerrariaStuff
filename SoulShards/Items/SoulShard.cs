@@ -52,41 +52,22 @@ namespace SoulShards.Items
 
 		public override void Load(TagCompound tag)
 		{
-			if (!tag.ContainsKey(Soul.nameString))
-				return;
-
-			killed = new Soul
-			{
-				type = tag.GetInt(Soul.typeString),
-				name = tag.GetString(Soul.nameString),
-				kills = tag.GetInt(Soul.killsString)
-			};
+			killed = Soul.Load(tag);
 		}
 
 		public override TagCompound Save()
 		{
-			return new TagCompound {
-				{Soul.typeString, killed.type},
-				{Soul.nameString, killed.name},
-				{Soul.killsString, killed.kills}
-			};
+			return killed.Serialize();
 		}
 
 		public override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(killed.type);
-			writer.Write(killed.name);
-			writer.Write(killed.kills);
+			killed.NetSend(writer);
 		}
 
 		public override void NetRecieve(BinaryReader reader)
 		{
-			killed = new Soul()
-			{
-				type = reader.ReadInt32(),
-				name = reader.ReadString(),
-				kills = reader.ReadInt32()
-			};
+			killed = Soul.NetReceive(reader);
 		}
 
 		public override void OnCraft(Recipe recipe)
