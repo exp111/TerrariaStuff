@@ -1,0 +1,5 @@
+author = exp111
+version = 0.1
+displayName = Soul Shards
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+includePDB = true
