@@ -16,13 +16,23 @@ namespace SoulShards
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (player.GetModPlayer<MPlayer>().soulShard == null)
-				return;
+			OnHit(target);
+		}
 
+		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+		{
+			OnHit(target);
+		}
+
+		public void OnHit(NPC target)
+		{
 			if (target.active) //ded?
 				return;
 
 			if (target.boss)
+				return;
+
+			if (player.GetModPlayer<MPlayer>().soulShard == null)
 				return;
 
 			SoulShard soulShard = (SoulShard)player.GetModPlayer<MPlayer>().soulShard;
