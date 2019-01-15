@@ -44,14 +44,14 @@ namespace SoulShards.TileEntities
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
 		{
-			j--; //cuz it's two wide
+			// i - 1 and j - 2 come from the fact that the origin of the tile is "new Point16(1, 2);", so we need to pass the coordinates back to the top left tile.
 			if (Main.netMode == 1)
 			{
-				NetMessage.SendTileRange(Main.myPlayer, i, j, 2, 2);
-				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, i, j, type);
+				NetMessage.SendTileRange(Main.myPlayer, i - 1, j - 1, 2, 2);
+				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, i - 1, j - 2, type);
 				return -1;
 			}
-			int id = Place(i, j);
+			int id = Place(i - 1, j - 2);
 			return id;
 		}
 	}

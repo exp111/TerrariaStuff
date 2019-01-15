@@ -43,6 +43,10 @@ namespace SoulShards.Tiles
 			if (player == null)
 				return;
 
+			// We need to get to frameX == 0 && frameY == 0
+			j -= Main.tile[i, j].frameY / 16;
+			i -= Main.tile[i, j].frameX / 16;
+
 			Item item = player.inventory[player.selectedItem];
 			
 			TESoulStatue tileEntity = null;
@@ -81,9 +85,8 @@ namespace SoulShards.Tiles
 					Main.NewText("Can't find Tile Entity.", Color.Red);
 					return;
 				}
-				tileEntity.soul = ((SoulShard)item.modItem).soul;
+				tileEntity.soul = shard.soul;
 			}
-
 
 			tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
 			if (tileEntity == null)
@@ -97,6 +100,7 @@ namespace SoulShards.Tiles
 			}
 			else
 			{
+				//TODO: maybe check for shift? then drop the soul
 				Main.NewText(String.Format("Soul Type: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
 			}
 		}
@@ -119,8 +123,21 @@ namespace SoulShards.Tiles
 
 		public override void HitWire(int i, int j)
 		{
+			// We need to get to frameX == 0 && frameY == 0
+			j -= Main.tile[i, j].frameY / 16;
+			i -= Main.tile[i, j].frameX / 16;
+			
+			TESoulStatue tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
+
 			//TODO: activate/deactive spawning
-			Main.NewText("Hit by wire");
+			if (tileEntity.soul != null)
+			{
+				Main.NewText("Hit by wire with Soul.");
+			}
+			else
+			{
+				Main.NewText("Hit by wire without Soul.");
+			}
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -130,6 +147,7 @@ namespace SoulShards.Tiles
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
+			//TODO: drop soul if existing
 			Item.NewItem(i * 16, j * 16, 32, 48, mod.ItemType<Items.Placeable.SoulStatue>());
 		}
 	}

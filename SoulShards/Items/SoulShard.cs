@@ -8,7 +8,7 @@ using Terraria.ModLoader.IO;
 
 namespace SoulShards.Items
 {
-	public abstract class SoulShard : ModItem // TODO: make into abstract and split into several tiers
+	public abstract class SoulShard : ModItem
 	{
 		public Soul soul = new Soul();
 		public abstract int neededKills { get; }
@@ -61,16 +61,9 @@ namespace SoulShards.Items
 				soul = new Soul();
 		}
 
-		public static SoulShard GetFromItem(Item item) //FIXME: there is probably a better way than try casting
+		public static SoulShard GetFromItem(Item item)
 		{
-			try
-			{
-				return (SoulShard)item.modItem;
-			}
-			catch (InvalidCastException)
-			{
-				return null;
-			}
+			return item.modItem is SoulShard ? (SoulShard)item.modItem : null;
 		}
 
 		public override TagCompound Save()
@@ -92,7 +85,7 @@ namespace SoulShards.Items
 
 		public override void OnCraft(Recipe recipe)
 		{
-			soul = new Soul(); // Reset
+			soul = new Soul(); // Reset //TODO: only if required == result
 			item.prefix = 0;
 		}
 
