@@ -8,7 +8,7 @@ namespace SoulShards.Items.Placeable
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Soul Statue");
-			Tooltip.SetDefault("Spawn your Souls. Shift-Rightclick to remove again.");
+			Tooltip.SetDefault("Spawn your Souls.");
 		}
 
 		public override void SetDefaults()

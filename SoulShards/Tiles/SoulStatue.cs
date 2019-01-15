@@ -68,7 +68,15 @@ namespace SoulShards.Tiles
 
 				if (shard.soul.ID == 0) // shard not bound to an enemy
 				{
-					Main.NewText(String.Format("First kill a enemy with the Soul Shard equipped and kill {0} Enemies.", shard.neededKills), Color.Red);
+					if (tileEntity.soul != null) // transfer soul from statue to shard
+					{
+						shard.soul = tileEntity.soul;
+						tileEntity.soul = null;
+					}
+					else // both empty -> print info
+					{
+						Main.NewText(String.Format("First kill a enemy with the Soul Shard equipped and kill {0} Enemies.", shard.neededKills), Color.Red);
+					}
 					return;
 				}
 
@@ -105,21 +113,7 @@ namespace SoulShards.Tiles
 			}
 			else
 			{
-				//TODO: maybe check for shift? then drop the soul
-				KeyboardState keyboard = Keyboard.GetState();
-				if (keyboard.IsKeyDown(Keys.LeftShift)) // drop soul
-				{
-					Vector2 worldCord = new Vector2(i, j).ToWorldCoordinates();
-					//TODO: we need to save tier
-					int newItem = Item.NewItem((int)Math.Round(worldCord.X), (int)Math.Round(worldCord.Y), 16, 16, mod.ItemType<SoulShard1>());
-					((SoulShard)Main.item[newItem].modItem).soul = tileEntity.soul;
-
-					tileEntity.soul = null;
-				}
-				else // print info
-				{
-					Main.NewText(String.Format("Soul ID: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
-				}
+				Main.NewText(String.Format("Soul ID: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
 			}
 		}
 

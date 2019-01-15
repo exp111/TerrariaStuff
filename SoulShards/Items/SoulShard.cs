@@ -20,7 +20,7 @@ namespace SoulShards.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault(name);
-			Tooltip.SetDefault("Kill a enemy with this equipped.");
+			Tooltip.SetDefault("Kill a enemy with this equipped or right click a statue.");
 		}
 		public override void SetDefaults()
 		{
