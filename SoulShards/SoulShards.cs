@@ -14,8 +14,6 @@ namespace SoulShards
 		public int kills = 0;
 		public const string killsString = "soulKills";
 
-		public const int neededKills = 10;
-
 		public TagCompound Serialize()
 		{
 			return new TagCompound {

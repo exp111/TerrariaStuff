@@ -46,7 +46,7 @@ namespace SoulShards
 				if (soulShard.killed.type != target.type) // not our type?
 					return;
 			}
-			soulShard.killed.kills++;
+			soulShard.killed.kills++; //TODO: += according to tier? //TODO: stop adding after full?
 		}
 	}
 }

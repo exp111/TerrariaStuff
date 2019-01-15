@@ -37,6 +37,7 @@
     <Compile Include="Items\SoulShard.cs" />
     <Compile Include="MPlayer.cs" />
     <Compile Include="SoulShards.cs" />
+    <Compile Include="TileEntities\TESoulStatue.cs" />
     <Compile Include="Tiles\SoulStatue.cs" />
   </ItemGroup>
   <ItemGroup>

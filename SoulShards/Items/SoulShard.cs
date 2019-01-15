@@ -8,9 +8,10 @@ using Terraria.ModLoader.IO;
 
 namespace SoulShards.Items
 {
-	public class SoulShard : ModItem
+	public class SoulShard : ModItem // TODO: make into abstract and split into several tiers
 	{
 		public Soul killed = new Soul();
+		public int neededKills = 10;
 
 		public override void SetStaticDefaults()
 		{
@@ -73,6 +74,7 @@ namespace SoulShards.Items
 		public override void OnCraft(Recipe recipe)
 		{
 			killed = new Soul(); // Reset
+			item.prefix = 0;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -80,7 +82,11 @@ namespace SoulShards.Items
 			if (!String.IsNullOrEmpty(killed.name) && killed.kills > 0)
 			{
 				tooltips.Add(
-					new TooltipLine(mod, "SoulShard", String.Format("Bound to {0}. Kills: {1}", killed.name, killed.kills)));
+					new TooltipLine(mod, 
+					"SoulShard", 
+					String.Format("Bound to {0}. Kills: {1}", killed.name, killed.kills)));
+
+				//TODO: change tooltip if soul is full
 			}
 		}
 	}

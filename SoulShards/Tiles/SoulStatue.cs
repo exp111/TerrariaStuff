@@ -11,13 +11,15 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.DataStructures;
 using SoulShards.Items;
+using Microsoft.Xna.Framework.Input;
+using Terraria.ModLoader.IO;
+using System.IO;
+using SoulShards.TileEntities;
 
 namespace SoulShards.Tiles
 {
 	public class SoulStatue : ModTile
 	{
-		public Soul soul = null;
-
 		public override void SetDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
@@ -25,7 +27,9 @@ namespace SoulShards.Tiles
 			TileObjectData.newTile.Height = 3;
 			TileObjectData.newTile.Origin = new Point16(1, 2);
 			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 18 };
+			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TESoulStatue>().Hook_AfterPlacement, -1, 0, false);
 			TileObjectData.addTile(Type);
+
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Soul Statue");
 			AddMapEntry(new Color(190, 230, 190), name);
@@ -35,46 +39,85 @@ namespace SoulShards.Tiles
 
 		public override void RightClick(int i, int j)
 		{
-			Player player = Main.LocalPlayer;
+			Player player = Main.player[Main.myPlayer];
 			if (player == null)
 				return;
 
-			if (player.HeldItem.type == mod.ItemType<SoulShard>())
+			Item item = player.inventory[player.selectedItem];
+			TESoulStatue tileEntity = null;
+			if (item.type == mod.ItemType<SoulShard>())
 			{
-				SoulShard shard = (SoulShard)player.HeldItem.modItem;
+				player.tileInteractionHappened = true;
+
+				SoulShard shard = (SoulShard)item.modItem;
 				if (shard.killed.type == 0)
 				{
-					Main.NewText(String.Format("First kill a enemy with the Soul Shard equipped and kill {0} Enemies.", Soul.neededKills), Color.Red);
+					Main.NewText(String.Format("First kill a enemy with the Soul Shard equipped and kill {0} Enemies.", shard.neededKills), Color.Red);
 					return;
 				}
 
-				if (shard.killed.kills < Soul.neededKills)
+				if (shard.killed.kills < shard.neededKills)
 				{
-					Main.NewText(String.Format("You need {0} more kills.", Soul.neededKills - shard.killed.kills), Color.Red);
+					Main.NewText(String.Format("You need {0} more kills.", shard.neededKills - shard.killed.kills), Color.Red);
 					return;
 				}
 
-				//TODO: transfer soul & remove item from inventory
+				//	decrease stack
+				if (--item.stack <= 0)
+				{
+					item.SetDefaults(0);
+				}
+				if (player.selectedItem == 58) // main.mouseItem == player.inventory[player.selectedItem]
+				{
+					Main.mouseItem = item.Clone();
+				}
+
+				// transfer soul
+				tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
+				if (tileEntity == null)
+				{
+					Main.NewText("Can't find Tile Entity.", Color.Red);
+					return;
+				}
+				tileEntity.soul = ((SoulShard)item.modItem).killed;
+			}
+
+
+			tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
+			if (tileEntity == null)
+			{
+				Main.NewText("Can't find Tile Entity.", Color.Red);
+				return;
+			}
+			if (tileEntity.soul == null)
+			{
+				Main.NewText("No Soul.");
+			}
+			else
+			{
+				Main.NewText(String.Format("Soul Type: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
+			}
+		}
+
+		public override void MouseOver(int i, int j)
+		{
+			Player player = Main.player[Main.myPlayer];
+			if (player == null)
+				return;
+
+			Item item = player.inventory[player.selectedItem];
+			if (item.type == mod.ItemType<SoulShard>())
+			{
+				player.noThrow = 2;
+				player.showItemIcon = true;
+				player.showItemIcon2 = mod.ItemType<SoulShard>();
 			}
 		}
 
 		public override void HitWire(int i, int j)
 		{
 			//TODO: activate/deactive spawning
-		}
-
-		public override void MouseOver(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
-			if (player == null)
-				return;
-
-			if (player.HeldItem.type == mod.ItemType<SoulShard>())
-			{
-				player.noThrow = 2;
-				player.showItemIcon = true;
-				player.showItemIcon2 = mod.ItemType<SoulShard>();
-			}
+			Main.NewText("Hit by wire");
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
