@@ -10,8 +10,8 @@ namespace SoulShards
 {
 	public class Soul
 	{
-		public int type = 0;
-		public const string typeString = "soulType";
+		public int ID = 0;
+		public const string typeString = "soulID";
 		public string name = "";
 		public const string nameString = "soulName";
 		public int kills = 0;
@@ -20,7 +20,7 @@ namespace SoulShards
 		public TagCompound Serialize()
 		{
 			return new TagCompound {
-				{typeString, type},
+				{typeString, ID},
 				{nameString, name},
 				{killsString, kills}
 			};
@@ -33,7 +33,7 @@ namespace SoulShards
 
 			return new Soul
 			{
-				type = tag.GetInt(typeString),
+				ID = tag.GetInt(typeString),
 				name = tag.GetString(nameString),
 				kills = tag.GetInt(killsString)
 			};
@@ -41,7 +41,7 @@ namespace SoulShards
 
 		public void NetSend(BinaryWriter writer)
 		{
-			writer.Write(type);
+			writer.Write(ID);
 			writer.Write(name);
 			writer.Write(kills);
 		}
@@ -50,7 +50,7 @@ namespace SoulShards
 		{
 			return new Soul()
 			{
-				type = reader.ReadInt32(),
+				ID = reader.ReadInt32(),
 				name = reader.ReadString(),
 				kills = reader.ReadInt32()
 			};

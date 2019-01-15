@@ -36,14 +36,14 @@ namespace SoulShards
 				return;
 
 			SoulShard soulShard = (SoulShard)player.GetModPlayer<MPlayer>().soulShard;
-			if (soulShard.soul.type == 0) // unset?
+			if (soulShard.soul.ID == 0) // unset?
 			{
-				soulShard.soul.type = target.type;
+				soulShard.soul.ID = target.netID;
 				soulShard.soul.name = target.GivenOrTypeName;
 			}
 			else
 			{
-				if (soulShard.soul.type != target.type) // not our type?
+				if (soulShard.soul.ID != target.netID) // not our type?
 					return;
 			}
 			soulShard.soul.kills += soulShard.addPerKill; //TODO: stop adding after full?

@@ -20,6 +20,9 @@ namespace SoulShards.Tiles
 {
 	public class SoulStatue : ModTile
 	{
+		public double lastActivated = 0;
+		public const int delay = 1;
+
 		public override void SetDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
@@ -47,28 +50,41 @@ namespace SoulShards.Tiles
 			j -= Main.tile[i, j].frameY / 16;
 			i -= Main.tile[i, j].frameX / 16;
 
+			// Get the Tile Entity
+			TESoulStatue tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
+			if (tileEntity == null)
+			{
+				Main.NewText("Can't find Tile Entity.", Color.Red);
+				return;
+			}
+
+			// Try to get Soul Shard from item
 			Item item = player.inventory[player.selectedItem];
-			
-			TESoulStatue tileEntity = null;
 			SoulShard shard = SoulShard.GetFromItem(item);
 			
-			if (shard != null)
+			if (shard != null) // shard in hand
 			{
 				player.tileInteractionHappened = true;
 
-				if (shard.soul.type == 0)
+				if (shard.soul.ID == 0) // shard not bound to an enemy
 				{
 					Main.NewText(String.Format("First kill a enemy with the Soul Shard equipped and kill {0} Enemies.", shard.neededKills), Color.Red);
 					return;
 				}
 
-				if (shard.soul.kills < shard.neededKills)
+				if (shard.soul.kills < shard.neededKills) // shard has not enough kills
 				{
 					Main.NewText(String.Format("You need {0} more kills.", shard.neededKills - shard.soul.kills), Color.Red);
 					return;
 				}
 
-				//	decrease stack
+				if (tileEntity.soul != null) // already got a soul
+				{
+					Main.NewText("Statue already has a soul.", Color.Red);
+					return;
+				}
+
+				// decrease stack
 				if (--item.stack <= 0)
 				{
 					item.SetDefaults(0);
@@ -79,21 +95,10 @@ namespace SoulShards.Tiles
 				}
 
 				// transfer soul
-				tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
-				if (tileEntity == null)
-				{
-					Main.NewText("Can't find Tile Entity.", Color.Red);
-					return;
-				}
 				tileEntity.soul = shard.soul;
 			}
 
-			tileEntity = (TESoulStatue)TileEntity.ByPosition[new Point16(i, j)];
-			if (tileEntity == null)
-			{
-				Main.NewText("Can't find Tile Entity.", Color.Red);
-				return;
-			}
+			// Print info about the statue
 			if (tileEntity.soul == null)
 			{
 				Main.NewText("No Soul.");
@@ -101,7 +106,7 @@ namespace SoulShards.Tiles
 			else
 			{
 				//TODO: maybe check for shift? then drop the soul
-				Main.NewText(String.Format("Soul Type: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
+				Main.NewText(String.Format("Soul ID: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
 			}
 		}
 
@@ -132,11 +137,12 @@ namespace SoulShards.Tiles
 			//TODO: activate/deactive spawning
 			if (tileEntity.soul != null)
 			{
-				Main.NewText("Hit by wire with Soul.");
-			}
-			else
-			{
-				Main.NewText("Hit by wire without Soul.");
+				if (Main.time - lastActivated >= delay)
+				{
+					Vector2 worldCord = new Vector2(i, j).ToWorldCoordinates();
+					NPC.NewNPC((int)Math.Round(worldCord.X), (int)Math.Round(worldCord.Y), tileEntity.soul.ID);
+					lastActivated = Main.time;
+				}
 			}
 		}
 
