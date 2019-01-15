@@ -106,7 +106,20 @@ namespace SoulShards.Tiles
 			else
 			{
 				//TODO: maybe check for shift? then drop the soul
-				Main.NewText(String.Format("Soul ID: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
+				KeyboardState keyboard = Keyboard.GetState();
+				if (keyboard.IsKeyDown(Keys.LeftShift)) // drop soul
+				{
+					Vector2 worldCord = new Vector2(i, j).ToWorldCoordinates();
+					//TODO: we need to save tier
+					int newItem = Item.NewItem((int)Math.Round(worldCord.X), (int)Math.Round(worldCord.Y), 16, 16, mod.ItemType<SoulShard1>());
+					((SoulShard)Main.item[newItem].modItem).soul = tileEntity.soul;
+
+					tileEntity.soul = null;
+				}
+				else // print info
+				{
+					Main.NewText(String.Format("Soul ID: {0}, Kills: {1}.", tileEntity.soul.name, tileEntity.soul.kills));
+				}
 			}
 		}
 
