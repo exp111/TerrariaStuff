@@ -1,5 +1,8 @@
+using SoulShards.Items;
 using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -26,7 +29,7 @@ namespace SoulShards
 		public static Soul Load(TagCompound tag)
 		{
 			if (!tag.ContainsKey(nameString))
-				return new Soul();
+				return null;
 
 			return new Soul
 			{

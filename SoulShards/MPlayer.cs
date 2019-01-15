@@ -32,21 +32,21 @@ namespace SoulShards
 			if (target.boss)
 				return;
 
-			if (player.GetModPlayer<MPlayer>().soulShard == null)
+			if (player.GetModPlayer<MPlayer>().soulShard == null) // no accessoire equipped?
 				return;
 
 			SoulShard soulShard = (SoulShard)player.GetModPlayer<MPlayer>().soulShard;
-			if (soulShard.killed.type == 0) // unset?
+			if (soulShard.soul.type == 0) // unset?
 			{
-				soulShard.killed.type = target.type;
-				soulShard.killed.name = target.GivenOrTypeName;
+				soulShard.soul.type = target.type;
+				soulShard.soul.name = target.GivenOrTypeName;
 			}
 			else
 			{
-				if (soulShard.killed.type != target.type) // not our type?
+				if (soulShard.soul.type != target.type) // not our type?
 					return;
 			}
-			soulShard.killed.kills++; //TODO: += according to tier? //TODO: stop adding after full?
+			soulShard.soul.kills += soulShard.addPerKill; //TODO: stop adding after full?
 		}
 	}
 }

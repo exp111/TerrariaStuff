@@ -8,14 +8,18 @@ using Terraria.ModLoader.IO;
 
 namespace SoulShards.Items
 {
-	public class SoulShard : ModItem // TODO: make into abstract and split into several tiers
+	public abstract class SoulShard : ModItem // TODO: make into abstract and split into several tiers
 	{
-		public Soul killed = new Soul();
-		public int neededKills = 10;
+		public Soul soul = new Soul();
+		public abstract int neededKills { get; }
+		public abstract int addPerKill { get; }
+		public abstract String name { get; }
+
+		public override string Texture { get { return (GetType().Namespace + "." + "SoulShard").Replace('.', '/'); } }
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Soul Shard");
+			DisplayName.SetDefault(name);
 			Tooltip.SetDefault("Kill a enemy with this equipped.");
 		}
 		public override void SetDefaults()
@@ -47,47 +51,77 @@ namespace SoulShards.Items
 		public override ModItem Clone(Item item)
 		{
 			SoulShard myClone = (SoulShard)base.Clone(item);
-			myClone.killed = killed;
+			myClone.soul = soul;
 			return myClone;
 		}
 
 		public override void Load(TagCompound tag)
 		{
-			killed = Soul.Load(tag);
+			soul = Soul.Load(tag);
+			if (soul == null)
+				soul = new Soul();
+		}
+
+		public static SoulShard GetFromItem(Item item) //FIXME: there is probably a better way than try casting
+		{
+			try
+			{
+				return (SoulShard)item.modItem;
+			}
+			catch (InvalidCastException)
+			{
+				return null;
+			}
 		}
 
 		public override TagCompound Save()
 		{
-			return killed.Serialize();
+			if (soul == null)
+				return new TagCompound();
+			return soul.Serialize();
 		}
 
 		public override void NetSend(BinaryWriter writer)
 		{
-			killed.NetSend(writer);
+			soul.NetSend(writer);
 		}
 
 		public override void NetRecieve(BinaryReader reader)
 		{
-			killed = Soul.NetReceive(reader);
+			soul = Soul.NetReceive(reader);
 		}
 
 		public override void OnCraft(Recipe recipe)
 		{
-			killed = new Soul(); // Reset
+			soul = new Soul(); // Reset
 			item.prefix = 0;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			if (!String.IsNullOrEmpty(killed.name) && killed.kills > 0)
+			if (!String.IsNullOrEmpty(soul.name) && soul.kills > 0)
 			{
 				tooltips.Add(
 					new TooltipLine(mod, 
 					"SoulShard", 
-					String.Format("Bound to {0}. Kills: {1}", killed.name, killed.kills)));
+					String.Format("Bound to {0}. Kills: {1}", soul.name, soul.kills)));
 
 				//TODO: change tooltip if soul is full
 			}
 		}
+	}
+
+	public class SoulShard1 : SoulShard
+	{
+		public override int neededKills { get { return 50; } }
+		public override int addPerKill { get { return 1; } }
+		public override String name { get { return "Soul Shard 1"; } }
+	}
+
+	public class SoulShardMax : SoulShard
+	{
+		public override int neededKills { get { return 50; } }
+		public override int addPerKill { get { return neededKills; } }
+		public override String name { get { return "Soul Shard Max"; } }
 	}
 }

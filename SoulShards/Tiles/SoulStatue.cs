@@ -44,21 +44,23 @@ namespace SoulShards.Tiles
 				return;
 
 			Item item = player.inventory[player.selectedItem];
+			
 			TESoulStatue tileEntity = null;
-			if (item.type == mod.ItemType<SoulShard>())
+			SoulShard shard = SoulShard.GetFromItem(item);
+			
+			if (shard != null)
 			{
 				player.tileInteractionHappened = true;
 
-				SoulShard shard = (SoulShard)item.modItem;
-				if (shard.killed.type == 0)
+				if (shard.soul.type == 0)
 				{
 					Main.NewText(String.Format("First kill a enemy with the Soul Shard equipped and kill {0} Enemies.", shard.neededKills), Color.Red);
 					return;
 				}
 
-				if (shard.killed.kills < shard.neededKills)
+				if (shard.soul.kills < shard.neededKills)
 				{
-					Main.NewText(String.Format("You need {0} more kills.", shard.neededKills - shard.killed.kills), Color.Red);
+					Main.NewText(String.Format("You need {0} more kills.", shard.neededKills - shard.soul.kills), Color.Red);
 					return;
 				}
 
@@ -79,7 +81,7 @@ namespace SoulShards.Tiles
 					Main.NewText("Can't find Tile Entity.", Color.Red);
 					return;
 				}
-				tileEntity.soul = ((SoulShard)item.modItem).killed;
+				tileEntity.soul = ((SoulShard)item.modItem).soul;
 			}
 
 
@@ -106,7 +108,8 @@ namespace SoulShards.Tiles
 				return;
 
 			Item item = player.inventory[player.selectedItem];
-			if (item.type == mod.ItemType<SoulShard>())
+			SoulShard shard = SoulShard.GetFromItem(item);
+			if (shard != null)
 			{
 				player.noThrow = 2;
 				player.showItemIcon = true;
