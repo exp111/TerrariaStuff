@@ -35,14 +35,13 @@ namespace SoulShards.Items
 			player.GetModPlayer<MPlayer>().soulShard = this;
 		}
 
+		public abstract void GetRecipes();
+
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			GetRecipes();
 
-			recipe = new ModRecipe(mod);
+			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(this);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
@@ -116,6 +115,14 @@ namespace SoulShards.Items
 		public override int neededKills { get { return 50; } }
 		public override int addPerKill { get { return 1; } }
 		public override String name { get { return "Soul Shard 1"; } }
+
+		public override void GetRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.DirtBlock, 10);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 
 	public class SoulShardMax : SoulShard
@@ -123,5 +130,14 @@ namespace SoulShards.Items
 		public override int neededKills { get { return 50; } }
 		public override int addPerKill { get { return neededKills; } }
 		public override String name { get { return "Soul Shard Max"; } }
+
+		public override void GetRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(mod.GetItem<SoulShard1>());
+			recipe.AddIngredient(ItemID.DirtBlock, 10);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }
