@@ -3,6 +3,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.GameContent.Events;
+using System.IO;
 
 namespace FasterOldOnesArmy.Tiles
 {
@@ -23,6 +24,7 @@ namespace FasterOldOnesArmy.Tiles
 			{
 				Main.NewText("Skipped!", Colors.CoinGold);
 				DD2Event.TimeLeftBetweenWaves = 1;
+				Send((byte)ModNetHandler.MessageType.TimeLeft, DD2Event.TimeLeftBetweenWaves);
 				return;
 			}
 
@@ -34,7 +36,16 @@ namespace FasterOldOnesArmy.Tiles
 			{
 				DD2Event.LaneSpawnRate += 10;
 			}
+			Send((byte)ModNetHandler.MessageType.LaneSpawnRate, DD2Event.LaneSpawnRate);
 			Main.NewText(string.Format("Spawn rate set to {0}", DD2Event.LaneSpawnRate), Colors.CoinGold);
+		}
+
+		public void Send(byte msg, int value)
+		{
+			ModPacket packet = mod.GetPacket();
+			packet.Write(msg); // msg
+			packet.Write(value); // value
+			packet.Send(-1);
 		}
 	}
 }
