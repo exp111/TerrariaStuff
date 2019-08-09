@@ -1,0 +1,5 @@
+displayName = Challenge Mod
+author = exp111
+version = 0.1
+includePDB=true
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*

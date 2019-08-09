@@ -32,9 +32,10 @@ namespace NPCPrisonBuilder.Items
 		{
 			item.width = 20;
 			item.height = 20;
-			item.maxStack = 1;
+			item.maxStack = 999;
 			item.value = 1;
-			item.rare = 10;
+			item.rare = 0;
+			item.consumable = true;
 
 			item.useStyle = 4;
 			item.useAnimation = 30;
@@ -67,7 +68,6 @@ namespace NPCPrisonBuilder.Items
 			return true;
 		}
 
-		// Token: 0x060006F0 RID: 1776 RVA: 0x00024301 File Offset: 0x00022501
 		private static void PrisonPacket(int x, int y, int tileType, bool lights)
 		{
 			ModPacket packet = NPCPrisonBuilder.Instance.GetPacket(256);
@@ -79,7 +79,6 @@ namespace NPCPrisonBuilder.Items
 			packet.Send(-1, -1);
 		}
 
-		// Token: 0x060006F1 RID: 1777 RVA: 0x0002433C File Offset: 0x0002253C
 		internal static void HandleBuilding(int x, int y, int tileType, bool lights)
 		{
 			int[,] array = new int[,]
