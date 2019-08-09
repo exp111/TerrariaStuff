@@ -14,17 +14,22 @@ namespace NPCPrisonBuilder.Items
 		PLATFORM = 5
 	}
 
-	public class PrisonBuilder : ModItem
+	public abstract class PrisonBuilder : ModItem
 	{
-		int tileType = 0;
+		public abstract int tileType { get; }
+		public abstract short ingredient { get; }
+		public abstract string name { get; }
+
 		bool lights = true;
 
-		static ushort[] wallByType = { WallID.Wood };
-		static int[] tileByType = { TileID.WoodBlock };
-		
+		static ushort[] wallByType = { WallID.Wood, WallID.Stone };
+		static int[] tileByType = { TileID.WoodBlock, TileID.Stone };
+
+		public override string Texture { get { return (GetType().Namespace + "." + "PrisonBuilder").Replace('.', '/'); } }
+
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Prison Builder");
+			DisplayName.SetDefault(name);
 			Tooltip.SetDefault("Builds an NPC prison.\nClick where you want the bottom right block.\nPrison is 5 tiles wide, 12 tiles high.");
 		}
 
@@ -219,11 +224,26 @@ namespace NPCPrisonBuilder.Items
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(base.mod);
-			modRecipe.AddRecipeGroup("Wood", 52);
-			modRecipe.AddIngredient(ItemID.Gel);
+			modRecipe.AddIngredient(ingredient, 36); // blocks + walls
+			modRecipe.AddRecipeGroup("Wood", 16); //platform + workbench + chair + torch
+			modRecipe.AddIngredient(ItemID.Gel); // torch
 			modRecipe.AddTile(TileID.WorkBenches);
 			modRecipe.SetResult(this, 1);
 			modRecipe.AddRecipe();
 		}
+	}
+
+	public class WoodPrisonBuilder : PrisonBuilder
+	{
+		public override int tileType { get => 0; }
+		public override short ingredient { get => ItemID.Wood; }
+		public override string name { get => "Wood Prison Builder"; }
+	}
+
+	public class StonePrisonBuilder : PrisonBuilder
+	{
+		public override int tileType { get => 1; }
+		public override short ingredient { get => ItemID.StoneBlock; }
+		public override string name { get => "Stone Prison Builder"; }
 	}
 }
