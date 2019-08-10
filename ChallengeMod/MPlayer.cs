@@ -19,6 +19,7 @@ namespace ChallengeMod
 		public bool merfolk = false;
 		public bool noArmor = false; //TODO: maybe add a blocked item and put it into armor slot?
 		public bool noAccessories = false;
+		public bool oneHp = false;
 
 		bool hadGravControl = false;
 		int previousType = 0;
@@ -114,6 +115,12 @@ namespace ChallengeMod
 			{
 				player.gravDir = -1f;
 				player.gravControl = hadGravControl; //reset to previous state so we can't press up
+			}
+
+			if (oneHp)
+			{
+				player.statLifeMax2 = 1;
+				player.statLife = 1;
 			}
 		}
 

@@ -57,9 +57,11 @@ namespace ChallengeMod.UI
 			top += 20;
 			addCheckbox(top, "Merfolk", "Toggle Merfolk Mode", nameof(MPlayer.merfolk));
 			top += 20;
-			addCheckbox(top, "No Armor", "Toggle no Armor", nameof(MPlayer.noArmor));
+			addCheckbox(top, "No Armor", "Toggle no Armor Mode", nameof(MPlayer.noArmor));
 			top += 20;
-			addCheckbox(top, "No Accessories", "Toggle no Accessories", nameof(MPlayer.noAccessories));
+			addCheckbox(top, "No Accessories", "Toggle no Accessories Mode", nameof(MPlayer.noAccessories));
+			top += 20;
+			addCheckbox(top, "1 HP", "Toggle 1HP Mode", nameof(MPlayer.oneHp));
 
 			Append(basePanel);
 		}
