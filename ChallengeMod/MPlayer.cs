@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -15,12 +16,20 @@ namespace ChallengeMod
 		public bool noThrownDmg = false;
 
 		public bool upsideDown = false; //TODO: spawn blocks under/above player after toggle
-		public bool merfolk = false; //TODO: force merfolk appereance?
+		public bool merfolk = false;
 		public bool noArmor = false; //TODO: maybe add a blocked item and put it into armor slot?
 		public bool noAccessories = false;
 
 		bool hadGravControl = false;
 		int previousType = 0;
+
+		public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
+		{
+			Item orb = new Item();
+			orb.SetDefaults(mod.ItemType<Items.ChallengeOrb>());
+			orb.stack = 1;
+			items.Add(orb);
+		}
 
 		public override void ResetEffects()
 		{
@@ -29,6 +38,12 @@ namespace ChallengeMod
 			{
 				player.gravDir = 1f;
 			}
+		}
+
+		public override void UpdateVanityAccessories()
+		{
+			if (merfolk)
+				player.forceMerman = true;
 		}
 
 		public override TagCompound Save()
