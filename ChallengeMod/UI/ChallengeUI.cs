@@ -1,11 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -53,15 +47,17 @@ namespace ChallengeMod.UI
 			addCheckbox(top, "No Thrown Dmg", "Toggle Thrown Damage", nameof(MPlayer.noThrownDmg));
 			top += 40;
 
-			addCheckbox(top, "Upside Down", "Toggle Australian Mode", nameof(MPlayer.upsideDown));
+			addCheckbox(top, "Upside Down", "Toggle Australian Mode (Always gravity potion)", nameof(MPlayer.upsideDown));
 			top += 20;
-			addCheckbox(top, "Merfolk", "Toggle Merfolk Mode", nameof(MPlayer.merfolk));
+			addCheckbox(top, "Merfolk", "Toggle Merfolk Mode (Always a merfolk. Can't breathe air)", nameof(MPlayer.merfolk));
 			top += 20;
-			addCheckbox(top, "No Armor", "Toggle no Armor Mode", nameof(MPlayer.noArmor));
+			addCheckbox(top, "No Armor", "Toggle no Armor Mode (Can't equip Armor)", nameof(MPlayer.noArmor));
 			top += 20;
-			addCheckbox(top, "No Accessories", "Toggle no Accessories Mode", nameof(MPlayer.noAccessories));
+			addCheckbox(top, "No Accessories", "Toggle no Accessories Mode (Can't equip Accessories)", nameof(MPlayer.noAccessories));
 			top += 20;
-			addCheckbox(top, "1 HP", "Toggle 1HP Mode", nameof(MPlayer.oneHp));
+			addCheckbox(top, "1 HP", "Toggle 1HP Mode (Always at 1 HP)", nameof(MPlayer.oneHp));
+			top += 20;
+			addCheckbox(top, "Mineless", "Toggle Mineless Mode (Can't mine any blocks)", nameof(MPlayer.mineless));
 
 			Append(basePanel);
 		}

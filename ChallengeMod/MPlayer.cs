@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,13 +15,29 @@ namespace ChallengeMod
 		public bool noThrownDmg = false;
 
 		public bool upsideDown = false; //TODO: spawn blocks under/above player after toggle
-		public bool merfolk = false;
+		public bool merfolk = false; //TODO: maybe make the fish bowl "useful"?
 		public bool noArmor = false; //TODO: maybe add a blocked item and put it into armor slot?
 		public bool noAccessories = false;
 		public bool oneHp = false;
+		public bool mineless = false;
 
 		bool hadGravControl = false;
 		int previousType = 0;
+
+		public override bool Autoload(ref string name)
+		{
+			On.Terraria.Player.PickTile += HookPickTile;
+			return base.Autoload(ref name);
+		}
+
+		private void HookPickTile(On.Terraria.Player.orig_PickTile orig, Player self, int x, int y, int pickPower)
+		{
+			if (mineless)
+			{
+				return;
+			}
+			orig(self, x, y, pickPower);
+		}
 
 		public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
 		{
@@ -69,6 +84,15 @@ namespace ChallengeMod
 				if (field != null)
 					field.SetValue(this, tag.GetBool(t.Key));
 			}
+		}
+
+		public override bool PreItemCheck()
+		{
+			if (true && player.HeldItem.pick > 0)
+			{
+				return true;
+			}
+			return true;
 		}
 
 		public override void PreUpdate()
