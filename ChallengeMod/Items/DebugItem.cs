@@ -33,12 +33,7 @@ namespace ChallengeMod.Items
 
 		public override bool UseItem(Player player)
 		{
-			var modPlayer = player.GetModPlayer<MPlayer>();
-
-			if (modPlayer == null)
-				return false;
-
-			modPlayer.upsideDown = !modPlayer.upsideDown;
+			ChallengeMod.Instance.ToggleUIVisible();
 
 			return true;
 		}

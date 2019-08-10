@@ -7,14 +7,15 @@ namespace ChallengeMod
 {
 	public class MPlayer : ModPlayer
 	{
-		public bool summonDmg = true;
-		public bool meleeDmg = true;
-		public bool magicDmg = true;
-		public bool rangedDmg = true;
-		public bool thrownDmg = true;
+		public bool noMeleeDmg = false;
+		public bool noSummonDmg = false;
+		public bool noMagicDmg = false;
+		public bool noRangedDmg = false;
+		public bool noThrownDmg = false;
 
 		public bool upsideDown = false;
-		public bool noArmor = false;
+		public bool noArmor = false; //TODO: maybe add a blocked item and put it into armor slot?
+		public int accessorySlots = 5;
 
 		bool hadGravControl = false;
 
@@ -31,11 +32,11 @@ namespace ChallengeMod
 		{
 			return new TagCompound()
 			{
-				{nameof(summonDmg), summonDmg},
-				{nameof(meleeDmg), meleeDmg},
-				{nameof(magicDmg), magicDmg},
-				{nameof(rangedDmg), rangedDmg},
-				{nameof(thrownDmg), thrownDmg},
+				{nameof(noMeleeDmg), noMeleeDmg},
+				{nameof(noSummonDmg), noSummonDmg},
+				{nameof(noMagicDmg), noMagicDmg},
+				{nameof(noRangedDmg), noRangedDmg},
+				{nameof(noThrownDmg), noThrownDmg},
 				{nameof(upsideDown), upsideDown},
 				{nameof(noArmor), noArmor}
 			};
@@ -43,11 +44,11 @@ namespace ChallengeMod
 
 		public override void Load(TagCompound tag)
 		{
-			summonDmg = tag.GetBool(nameof(summonDmg));
-			meleeDmg = tag.GetBool(nameof(meleeDmg));
-			magicDmg = tag.GetBool(nameof(magicDmg));
-			rangedDmg = tag.GetBool(nameof(rangedDmg));
-			thrownDmg = tag.GetBool(nameof(thrownDmg));
+			noMeleeDmg = tag.GetBool(nameof(noMeleeDmg));
+			noSummonDmg = tag.GetBool(nameof(noSummonDmg));
+			noMagicDmg = tag.GetBool(nameof(noMagicDmg));
+			noRangedDmg = tag.GetBool(nameof(noRangedDmg));
+			noThrownDmg = tag.GetBool(nameof(noThrownDmg));
 			upsideDown = tag.GetBool(nameof(upsideDown));
 			noArmor = tag.GetBool(nameof(noArmor));
 		}
@@ -99,19 +100,19 @@ namespace ChallengeMod
 
 		public bool? CanHit(Item item, NPC target)
 		{
-			if (item.melee && !meleeDmg)
+			if (item.melee && noMeleeDmg)
 				return false;
 
-			if (item.summon && !summonDmg)
+			if (item.summon && noSummonDmg)
 				return false;
 
-			if (item.ranged && !rangedDmg)
+			if (item.ranged && noRangedDmg)
 				return false;
 
-			if (item.magic && !magicDmg)
+			if (item.magic && noMagicDmg)
 				return false;
 
-			if (item.thrown && !thrownDmg)
+			if (item.thrown && noThrownDmg)
 				return false;
 
 			return null;
@@ -119,19 +120,19 @@ namespace ChallengeMod
 
 		public bool? CanHitWithProj(Projectile proj, NPC target)
 		{
-			if (proj.melee && !meleeDmg)
+			if (proj.melee && noMeleeDmg)
 				return false;
 
-			if (proj.minion && !summonDmg)
+			if (proj.minion && noSummonDmg)
 				return false;
 
-			if (proj.ranged && !rangedDmg)
+			if (proj.ranged && noRangedDmg)
 				return false;
 
-			if (proj.magic && !magicDmg)
+			if (proj.magic && noMagicDmg)
 				return false;
 
-			if (proj.thrown && !thrownDmg)
+			if (proj.thrown && noThrownDmg)
 				return false;
 
 			return null;
