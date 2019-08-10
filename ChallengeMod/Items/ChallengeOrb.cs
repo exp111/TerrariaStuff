@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace ChallengeMod.Items
 {
-	public class DebugItem : ModItem
+	public class ChallengeOrb : ModItem
 	{
 		public override void SetStaticDefaults() 
 		{

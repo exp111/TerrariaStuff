@@ -42,20 +42,24 @@ namespace ChallengeMod.UI
 			basePanel.Append(header);
 
 			int top = 30;
-			addCheckbox(top, "No Melee Dmg", "Toggle Melee Damage", "noMeleeDmg");
+			addCheckbox(top, "No Melee Dmg", "Toggle Melee Damage", nameof(MPlayer.noMeleeDmg));
 			top += 20;
-			addCheckbox(top, "No Summon Dmg", "Toggle Summon Damage", "noSummonDmg");
+			addCheckbox(top, "No Summon Dmg", "Toggle Summon Damage", nameof(MPlayer.noSummonDmg));
 			top += 20;
-			addCheckbox(top, "No Magic Dmg", "Toggle Magic Damage", "noMagicDmg");
+			addCheckbox(top, "No Magic Dmg", "Toggle Magic Damage", nameof(MPlayer.noMagicDmg));
 			top += 20;
-			addCheckbox(top, "No Ranged Dmg", "Toggle Ranged Damage", "noRangedDmg");
+			addCheckbox(top, "No Ranged Dmg", "Toggle Ranged Damage", nameof(MPlayer.noRangedDmg));
 			top += 20;
-			addCheckbox(top, "No Thrown Dmg", "Toggle Thrown Damage", "noThrownDmg");
+			addCheckbox(top, "No Thrown Dmg", "Toggle Thrown Damage", nameof(MPlayer.noThrownDmg));
 			top += 40;
 
-			addCheckbox(top, "Upside Down", "Toggle Australian Mode", "upsideDown");
+			addCheckbox(top, "Upside Down", "Toggle Australian Mode", nameof(MPlayer.upsideDown));
 			top += 20;
-			addCheckbox(top, "No Armor", "Toggle no Armor", "noArmor");
+			addCheckbox(top, "Merfolk", "Toggle Merfolk Mode", nameof(MPlayer.merfolk));
+			top += 20;
+			addCheckbox(top, "No Armor", "Toggle no Armor", nameof(MPlayer.noArmor));
+			top += 20;
+			addCheckbox(top, "No Accessories", "Toggle no Accessories", nameof(MPlayer.noAccessories));
 
 			Append(basePanel);
 		}

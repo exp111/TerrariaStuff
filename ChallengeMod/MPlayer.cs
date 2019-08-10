@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -13,11 +14,13 @@ namespace ChallengeMod
 		public bool noRangedDmg = false;
 		public bool noThrownDmg = false;
 
-		public bool upsideDown = false;
+		public bool upsideDown = false; //TODO: spawn blocks under/above player after toggle
+		public bool merfolk = false; //TODO: force merfolk appereance?
 		public bool noArmor = false; //TODO: maybe add a blocked item and put it into armor slot?
-		public int accessorySlots = 5;
+		public bool noAccessories = false;
 
 		bool hadGravControl = false;
+		int previousType = 0;
 
 		public override void ResetEffects()
 		{
@@ -30,35 +33,48 @@ namespace ChallengeMod
 
 		public override TagCompound Save()
 		{
-			return new TagCompound()
+			TagCompound tag = new TagCompound();
+			
+			// Add all public fields
+			foreach (var field in GetType().GetFields().Where(field => field.IsPublic))
 			{
-				{nameof(noMeleeDmg), noMeleeDmg},
-				{nameof(noSummonDmg), noSummonDmg},
-				{nameof(noMagicDmg), noMagicDmg},
-				{nameof(noRangedDmg), noRangedDmg},
-				{nameof(noThrownDmg), noThrownDmg},
-				{nameof(upsideDown), upsideDown},
-				{nameof(noArmor), noArmor}
-			};
+				tag.Add(field.Name, field.GetValue(this));
+			}
+
+			return tag;
 		}
 
 		public override void Load(TagCompound tag)
 		{
-			noMeleeDmg = tag.GetBool(nameof(noMeleeDmg));
-			noSummonDmg = tag.GetBool(nameof(noSummonDmg));
-			noMagicDmg = tag.GetBool(nameof(noMagicDmg));
-			noRangedDmg = tag.GetBool(nameof(noRangedDmg));
-			noThrownDmg = tag.GetBool(nameof(noThrownDmg));
-			upsideDown = tag.GetBool(nameof(upsideDown));
-			noArmor = tag.GetBool(nameof(noArmor));
+			foreach (var t in tag)
+			{
+				var field = typeof(MPlayer).GetField(t.Key);
+
+				if (field != null)
+					field.SetValue(this, tag.GetBool(t.Key));
+			}
 		}
 
-		public override void PostUpdate()
+		public override void PreUpdate()
 		{
-			if (upsideDown)
+			CheckAndUnequipArmor();
+			CheckAndUnqeuipAccessories();
+		}
+
+		public override void PostUpdateRunSpeeds()
+		{
+			if (merfolk)
 			{
-				player.gravDir = -1f;
-				player.gravControl = hadGravControl; //reset to previous state so we can't press up
+				previousType = player.armor[0].type;
+				player.armor[0].type = 250; //force fish bowl
+			}
+		}
+
+		public override void PreUpdateMovement()
+		{
+			if (merfolk)
+			{
+				player.armor[0].type = previousType; // reset hat again (so we get the other buffs)
 			}
 		}
 
@@ -70,14 +86,44 @@ namespace ChallengeMod
 				hadGravControl = player.gravControl; //save gravcontrol
 				player.gravControl = true; //set to true so we fall down
 			}
+
+			if (merfolk)
+			{
+				player.accMerman = true;
+			}
 		}
 
-		public override void PreUpdate()
+		public override void PostUpdate()
+		{
+			if (upsideDown)
+			{
+				player.gravDir = -1f;
+				player.gravControl = hadGravControl; //reset to previous state so we can't press up
+			}
+		}
+
+		public void CheckAndUnequipArmor()
 		{
 			if (!noArmor)
 				return;
-			
+
 			for (var i = 0; i < 3; i++)
+			{
+				var item = player.armor[i];
+				if (item.netID != 0) // Drop if valid item
+				{
+					player.QuickSpawnClonedItem(item); //clone & give it back
+					player.armor[i] = new Item();
+				}
+			}
+		}
+
+		public void CheckAndUnqeuipAccessories()
+		{
+			if (!noAccessories)
+				return;
+
+			for (var i = 3; i < 8 + player.extraAccessorySlots; i++)
 			{
 				var item = player.armor[i];
 				if (item.netID != 0) // Drop if valid item
