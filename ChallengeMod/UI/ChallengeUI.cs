@@ -91,7 +91,7 @@ namespace ChallengeMod.UI
 			if (modPlayer == null)
 				return;
 
-			typeof(MPlayer).GetField(field).SetValue(modPlayer, checkbox.Selected);
+			modPlayer.SetField(field, checkbox.Selected);
 		}
 
 		protected override void DrawSelf(SpriteBatch spriteBatch)

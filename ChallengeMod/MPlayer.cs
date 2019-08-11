@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -12,9 +13,9 @@ namespace ChallengeMod
 		public bool noSummonDmg = false;
 		public bool noMagicDmg = false;
 		public bool noRangedDmg = false;
-		public bool noThrownDmg = false;
+		public bool noThrownDmg = false; //TODO: add cross mod compability with Thorium (bard & healer)
 
-		public bool upsideDown = false; //TODO: spawn blocks under/above player after toggle
+		public bool upsideDown = false; //FIXME: no fall dmg if australian?
 		public bool merfolk = false; //TODO: maybe make the fish bowl "useful"?
 		public bool noArmor = false; //TODO: maybe add a blocked item and put it into armor slot?
 		public bool noAccessories = false;
@@ -24,27 +25,33 @@ namespace ChallengeMod
 		bool hadGravControl = false;
 		int previousType = 0;
 
+		public void SetField(string field, bool value) //TODO: make generic
+		{
+			var info = GetType().GetField(field);
+			if (info == null)
+				return;
+
+			info.SetValue(this, value);
+
+			switch (field)
+			{
+				case nameof(noAccessories):
+					UnqeuipAccessories();
+					break;
+				case nameof(upsideDown):
+					SpawnBlocks();
+					break;
+				default:
+					break;
+			}
+		}
+
 		public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
 		{
 			Item orb = new Item();
 			orb.SetDefaults(mod.ItemType<Items.ChallengeOrb>());
 			orb.stack = 1;
 			items.Add(orb);
-		}
-
-		public override void ResetEffects()
-		{
-			//reset upsidedown cuz we don't reset it //TODO: maybe move to upsidedown toggle as this cancels other mods
-			if (!upsideDown && !player.gravControl && !player.gravControl2)
-			{
-				player.gravDir = 1f;
-			}
-		}
-
-		public override void UpdateVanityAccessories()
-		{
-			if (merfolk) //Force merfolk look
-				player.forceMerman = true;
 		}
 
 		public override TagCompound Save()
@@ -74,7 +81,12 @@ namespace ChallengeMod
 		public override void PreUpdate()
 		{
 			CheckAndUnequipArmor();
-			CheckAndUnqeuipAccessories();
+		}
+
+		public override void UpdateVanityAccessories()
+		{
+			if (merfolk) //Force merfolk look
+				player.forceMerman = true;
 		}
 
 		public override void PostUpdateRunSpeeds()
@@ -91,6 +103,15 @@ namespace ChallengeMod
 			if (merfolk)
 			{
 				player.armor[0].type = previousType; // reset hat again (so we get the other buffs)
+			}
+		}
+
+		public override void ResetEffects()
+		{
+			//reset upsidedown cuz we don't reset it //TODO: maybe move to upsidedown toggle as this cancels other mods
+			if (!upsideDown && !player.gravControl && !player.gravControl2)
+			{
+				player.gravDir = 1f;
 			}
 		}
 
@@ -140,7 +161,7 @@ namespace ChallengeMod
 			}
 		}
 
-		public void CheckAndUnqeuipAccessories()
+		public void UnqeuipAccessories()
 		{
 			if (!noAccessories)
 				return;
@@ -153,6 +174,20 @@ namespace ChallengeMod
 					player.QuickSpawnClonedItem(item); //clone & give it back
 					player.armor[i] = new Item();
 				}
+			}
+		}
+
+		public void SpawnBlocks()
+		{
+			if (!upsideDown)
+				return;
+
+			var pos = player.position.ToTileCoordinates();
+			int x = pos.X;
+			int y = pos.Y - 1;
+			for (var i = 0; i < 2; i++)
+			{
+				WorldGen.PlaceTile(x + i, y, TileID.Dirt);
 			}
 		}
 
