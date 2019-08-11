@@ -26,16 +26,16 @@ namespace ChallengeMod
 
 		public override bool Autoload(ref string name)
 		{
-			On.Terraria.Player.PickTile += HookPickTile;
+			//On.Terraria.Player.PickTile += HookPickTile;
 			return base.Autoload(ref name);
 		}
 
 		private void HookPickTile(On.Terraria.Player.orig_PickTile orig, Player self, int x, int y, int pickPower)
 		{
-			if (mineless)
-			{
+			MPlayer modPlayer = self.GetModPlayer<MPlayer>();
+			if (modPlayer != null && modPlayer.mineless)
 				return;
-			}
+
 			orig(self, x, y, pickPower);
 		}
 
