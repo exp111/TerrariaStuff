@@ -22,7 +22,7 @@ namespace ChallengeMod
 		public bool oneHp = false;
 		public bool mineless = false;
 
-		bool hadGravControl = false;
+		bool gravControlNeedsReset = false;
 		int previousType = 0;
 
 		public void SetField(string field, bool value) //TODO: make generic
@@ -40,6 +40,10 @@ namespace ChallengeMod
 					break;
 				case nameof(upsideDown):
 					SpawnBlocks();
+					SetGravDirOnToggle();
+					break;
+				case nameof(oneHp):
+					player.statLife = 1;
 					break;
 				default:
 					break;
@@ -54,6 +58,7 @@ namespace ChallengeMod
 			items.Add(orb);
 		}
 
+		#region TagSaveLoadEvents
 		public override TagCompound Save()
 		{
 			TagCompound tag = new TagCompound();
@@ -77,7 +82,9 @@ namespace ChallengeMod
 					field.SetValue(this, tag.GetBool(t.Key));
 			}
 		}
+		#endregion
 
+		#region UpdateEvents
 		public override void PreUpdate()
 		{
 			CheckAndUnequipArmor();
@@ -108,19 +115,15 @@ namespace ChallengeMod
 
 		public override void ResetEffects()
 		{
-			//reset upsidedown cuz we don't reset it //TODO: maybe move to upsidedown toggle as this cancels other mods
-			if (!upsideDown && !player.gravControl && !player.gravControl2)
-			{
-				player.gravDir = 1f;
-			}
+			
 		}
 
 		public override void PostUpdateBuffs()
 		{
-			if (upsideDown)
+			if (upsideDown && !player.gravControl && !player.gravControl2) //don't do shit if we have a grav potion
 			{
 				player.gravDir = -1f;
-				hadGravControl = player.gravControl; //save gravcontrol
+				gravControlNeedsReset = true; //save gravcontrol
 				player.gravControl = true; //set to true so we fall down
 			}
 
@@ -132,19 +135,21 @@ namespace ChallengeMod
 
 		public override void PostUpdate()
 		{
-			if (upsideDown)
+			if (upsideDown && gravControlNeedsReset) //only reset if we changed smth
 			{
 				player.gravDir = -1f;
-				player.gravControl = hadGravControl; //reset to previous state so we can't press up
+				player.gravControl = false; //reset to false state so we can't press up
+				gravControlNeedsReset = false;
 			}
 
 			if (oneHp)
 			{
 				player.statLifeMax2 = 1;
-				player.statLife = 1;
 			}
 		}
+		#endregion
 
+		#region NoArmor
 		public void CheckAndUnequipArmor()
 		{
 			if (!noArmor)
@@ -160,7 +165,9 @@ namespace ChallengeMod
 				}
 			}
 		}
+		#endregion
 
+		#region NoAccessories
 		public void UnqeuipAccessories()
 		{
 			if (!noAccessories)
@@ -176,7 +183,9 @@ namespace ChallengeMod
 				}
 			}
 		}
+		#endregion
 
+		#region UpsideDown
 		public void SpawnBlocks()
 		{
 			if (!upsideDown)
@@ -191,6 +200,20 @@ namespace ChallengeMod
 			}
 		}
 
+		public void SetGravDirOnToggle()
+		{
+			if (!upsideDown)
+			{
+				player.gravDir = 1f; //somehow it doesn't reset gravDir so we need to do it manually
+			}
+			else
+			{
+				player.gravDir = -1f;
+			}
+		}
+		#endregion
+
+		#region CanHitNPCEvents
 		public override bool? CanHitNPC(Item item, NPC target)
 		{
 			return CanHit(item, target);
@@ -200,7 +223,9 @@ namespace ChallengeMod
 		{
 			return CanHitWithProj(proj, target);
 		}
+		#endregion
 
+		#region CanHitEventHandlers
 		public bool? CanHit(Item item, NPC target)
 		{
 			if (item.melee && noMeleeDmg)
@@ -240,5 +265,6 @@ namespace ChallengeMod
 
 			return null;
 		}
+		#endregion
 	}
 }
