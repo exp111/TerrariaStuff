@@ -1,1 +1,12 @@
 Play challenge runs... you know... pretty self explaining.
+
+Current Challenges (may not be up to date):
+No Melee/Summon/Magic/Ranged/Thrown Damage.
+Upside Down
+Merfolk
+No Armor
+No Accessories
+1 HP
+Mineless
+
+Use the Orb (given on spawn) to activate/deactive Challenges.

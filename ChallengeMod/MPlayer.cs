@@ -43,7 +43,7 @@ namespace ChallengeMod
 
 		public override void UpdateVanityAccessories()
 		{
-			if (merfolk)
+			if (merfolk) //Force merfolk look
 				player.forceMerman = true;
 		}
 
@@ -69,15 +69,6 @@ namespace ChallengeMod
 				if (field != null)
 					field.SetValue(this, tag.GetBool(t.Key));
 			}
-		}
-
-		public override bool PreItemCheck()
-		{
-			if (true && player.HeldItem.pick > 0)
-			{
-				return true;
-			}
-			return true;
 		}
 
 		public override void PreUpdate()
