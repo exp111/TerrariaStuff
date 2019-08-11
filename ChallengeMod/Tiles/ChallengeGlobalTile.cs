@@ -10,6 +10,21 @@ namespace ChallengeMod.Tiles
 {
 	class ChallengeGlobalTile : GlobalTile
 	{
+		public override bool Autoload(ref string name)
+		{
+			On.Terraria.Player.PickTile += HookPickTile;
+			return base.Autoload(ref name);
+		}
+
+		private void HookPickTile(On.Terraria.Player.orig_PickTile orig, Player self, int x, int y, int pickPower)
+		{
+			MPlayer modPlayer = self.GetModPlayer<MPlayer>();
+			if (modPlayer != null && modPlayer.mineless)
+				return;
+
+			orig(self, x, y, pickPower);
+		}
+
 		public override bool CanExplode(int i, int j, int type)
 		{
 			MPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MPlayer>();
@@ -22,20 +37,6 @@ namespace ChallengeMod.Tiles
 			}
 
 			return base.CanExplode(i, j, type);
-		}
-
-		public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
-		{
-			MPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MPlayer>();
-			if (modPlayer != null)
-			{
-				if (modPlayer.mineless && modPlayer.player.HeldItem.pick > 0) //only if its a pickaxe //FIXME: can't use pick & axe multitools
-				{
-					return false;
-				}
-			}
-
-			return base.CanKillTile(i, j, type, ref blockDamaged);
 		}
 	}
 }

@@ -24,21 +24,6 @@ namespace ChallengeMod
 		bool hadGravControl = false;
 		int previousType = 0;
 
-		public override bool Autoload(ref string name)
-		{
-			//On.Terraria.Player.PickTile += HookPickTile;
-			return base.Autoload(ref name);
-		}
-
-		private void HookPickTile(On.Terraria.Player.orig_PickTile orig, Player self, int x, int y, int pickPower)
-		{
-			MPlayer modPlayer = self.GetModPlayer<MPlayer>();
-			if (modPlayer != null && modPlayer.mineless)
-				return;
-
-			orig(self, x, y, pickPower);
-		}
-
 		public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
 		{
 			Item orb = new Item();
