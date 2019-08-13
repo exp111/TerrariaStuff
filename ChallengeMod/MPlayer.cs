@@ -95,6 +95,32 @@ namespace ChallengeMod
 			if (merfolk) //Force merfolk look
 				player.forceMerman = true;
 		}
+		
+
+		/*public override void SetControls()
+		{
+		}*/
+
+
+		/*public override void ResetEffects()
+		{
+			
+		}*/
+
+		public override void PostUpdateBuffs()
+		{
+			if (upsideDown && !player.gravControl && !player.gravControl2) //don't do shit if we have a grav potion
+			{
+				player.gravDir = -1f;
+				gravControlNeedsReset = true; //save gravcontrol
+				player.gravControl = true; //set to true so we fall down
+			}
+
+			if (merfolk)
+			{
+				player.accMerman = true;
+			}
+		}
 
 		public override void PostUpdateRunSpeeds()
 		{
@@ -110,26 +136,6 @@ namespace ChallengeMod
 			if (merfolk)
 			{
 				player.armor[0].type = previousType; // reset hat again (so we get the other buffs)
-			}
-		}
-
-		public override void ResetEffects()
-		{
-			
-		}
-
-		public override void PostUpdateBuffs()
-		{
-			if (upsideDown && !player.gravControl && !player.gravControl2) //don't do shit if we have a grav potion
-			{
-				player.gravDir = -1f;
-				gravControlNeedsReset = true; //save gravcontrol
-				player.gravControl = true; //set to true so we fall down
-			}
-
-			if (merfolk)
-			{
-				player.accMerman = true;
 			}
 		}
 
