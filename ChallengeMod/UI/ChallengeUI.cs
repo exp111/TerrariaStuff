@@ -21,7 +21,6 @@ namespace ChallengeMod.UI
 		{
 			basePanel = new UIPanel();
 			basePanel.Width.Set(300, 0f);
-			basePanel.Height.Set(300, 0f);
 			basePanel.HAlign = basePanel.VAlign = 0.5f;
 
 			UIImageButton closeButton = new UIImageButton(ChallengeMod.Instance.GetTexture("UI/closeButton"));
@@ -36,36 +35,34 @@ namespace ChallengeMod.UI
 			basePanel.Append(header);
 
 			int top = 30;
-			addCheckbox(top, "No Melee Dmg", "Toggle Melee Damage", nameof(MPlayer.noMeleeDmg));
+			addCheckbox(ref top, "No Melee Dmg", "Toggle Melee Damage", nameof(MPlayer.noMeleeDmg));
+			addCheckbox(ref top, "No Summon Dmg", "Toggle Summon Damage", nameof(MPlayer.noSummonDmg));
+			addCheckbox(ref top, "No Magic Dmg", "Toggle Magic Damage", nameof(MPlayer.noMagicDmg));
+			addCheckbox(ref top, "No Ranged Dmg", "Toggle Ranged Damage", nameof(MPlayer.noRangedDmg));
+			addCheckbox(ref top, "No Thrown Dmg", "Toggle Thrown Damage", nameof(MPlayer.noThrownDmg));
+			if (ChallengeMod.thoriumLoaded)
+			{
+				addCheckbox(ref top, "No Symphonic Dmg", "Toggle Symphonic Damage", nameof(MPlayer.noSymphonicDmg));
+				addCheckbox(ref top, "No Radiant Dmg", "Toggle Radiant Damage", nameof(MPlayer.noRadiantDmg));
+			}
 			top += 20;
-			addCheckbox(top, "No Summon Dmg", "Toggle Summon Damage", nameof(MPlayer.noSummonDmg));
-			top += 20;
-			addCheckbox(top, "No Magic Dmg", "Toggle Magic Damage", nameof(MPlayer.noMagicDmg));
-			top += 20;
-			addCheckbox(top, "No Ranged Dmg", "Toggle Ranged Damage", nameof(MPlayer.noRangedDmg));
-			top += 20;
-			addCheckbox(top, "No Thrown Dmg", "Toggle Thrown Damage", nameof(MPlayer.noThrownDmg));
-			top += 40;
 
-			addCheckbox(top, "Upside Down", "Toggle Australian Mode (Always gravity potion)", nameof(MPlayer.upsideDown));
-			top += 20;
-			addCheckbox(top, "Merfolk", "Toggle Merfolk Mode (Always a merfolk. Can't breathe air)", nameof(MPlayer.merfolk));
-			top += 20;
-			addCheckbox(top, "No Armor", "Toggle no Armor Mode (Can't equip Armor)", nameof(MPlayer.noArmor));
-			top += 20;
-			addCheckbox(top, "No Accessories", "Toggle no Accessories Mode (Can't equip Accessories)", nameof(MPlayer.noAccessories));
-			top += 20;
-			addCheckbox(top, "1 HP", "Toggle 1HP Mode (Always at 1 HP)", nameof(MPlayer.oneHp));
-			top += 20;
-			addCheckbox(top, "Mineless", "Toggle Mineless Mode (Can't mine any blocks)", nameof(MPlayer.mineless));
+			addCheckbox(ref top, "Upside Down", "Toggle Australian Mode (Always gravity potion)", nameof(MPlayer.upsideDown));
+			addCheckbox(ref top, "Merfolk", "Toggle Merfolk Mode (Always a merfolk. Can't breathe air)", nameof(MPlayer.merfolk));
+			addCheckbox(ref top, "No Armor", "Toggle no Armor Mode (Can't equip Armor)", nameof(MPlayer.noArmor));
+			addCheckbox(ref top, "No Accessories", "Toggle no Accessories Mode (Can't equip Accessories)", nameof(MPlayer.noAccessories));
+			addCheckbox(ref top, "1 HP", "Toggle 1HP Mode (Always at 1 HP)", nameof(MPlayer.oneHp));
+			addCheckbox(ref top, "Mineless", "Toggle Mineless Mode (Can't mine any blocks)", nameof(MPlayer.mineless));
 
+			basePanel.Height.Set(top + 20, 0f);
 			Append(basePanel);
 		}
 
-		private void addCheckbox(int y, string name, string tooltip, string field)
+		private void addCheckbox(ref int y, string name, string tooltip, string field)
 		{
 			UICheckbox checkbox = new UICheckbox(name, tooltip);
 			checkbox.Top.Set(y, 0f);
+			y += 20; //increase height
 			checkbox.Left.Set(12f, 0f);
 			checkbox.OnSelectedChanged += () => SetModPlayerField(field, checkbox);
 			basePanel.Append(checkbox);

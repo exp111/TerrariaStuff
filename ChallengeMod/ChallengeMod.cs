@@ -13,6 +13,9 @@ namespace ChallengeMod
 		private UserInterface _challengeInterface;
 		internal ChallengeUI ChallengeUI;
 
+		internal static bool thoriumLoaded;
+		internal static Mod ThoriumMod;
+
 		public ChallengeMod()
 		{
 		}
@@ -20,6 +23,9 @@ namespace ChallengeMod
 		public override void Load()
 		{
 			Instance = this;
+
+			ThoriumMod = ModLoader.GetMod("ThoriumMod");
+			thoriumLoaded = ThoriumMod != null;
 
 			if (!Main.dedServ)
 			{

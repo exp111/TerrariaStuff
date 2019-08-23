@@ -8,13 +8,13 @@ namespace ChallengeMod.Items
 	{
 		public override void SetStaticDefaults() 
 		{
-			Tooltip.SetDefault("Use to change challenge");
+			Tooltip.SetDefault("Use to change challenges");
 		}
 
 		public override void SetDefaults() 
 		{
-			item.width = 40;
-			item.height = 40;
+			item.width = 26;
+			item.height = 26;
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = 4;

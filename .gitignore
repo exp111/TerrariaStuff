@@ -58,3 +58,5 @@ obj/
 v15/
 Terraria/
 TerrariaAssets/
+bin/
+.vs/

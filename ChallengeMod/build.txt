@@ -1,5 +1,7 @@
 displayName = Challenge Mod
 author = exp111
-version = 0.1
+version = 1.0
+homepage = https://www.github.com/exp111/TerrariaStuff/
 includePDB=true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+weakReferences = ThoriumMod@1.6.0.4

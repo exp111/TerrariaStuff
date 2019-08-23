@@ -13,7 +13,10 @@ namespace ChallengeMod
 		public bool noSummonDmg = false;
 		public bool noMagicDmg = false;
 		public bool noRangedDmg = false;
-		public bool noThrownDmg = false; //TODO: add cross mod compability with Thorium (bard & healer)
+		public bool noThrownDmg = false;
+		// Thorium Cross-Mod stuff
+		public bool noSymphonicDmg = false; //Bard
+		public bool noRadiantDmg = false; //Healer
 
 		public bool upsideDown = false; //FIXME: no fall dmg if australian?
 		public bool merfolk = false; //TODO: maybe make the fish bowl "useful"?
@@ -54,7 +57,6 @@ namespace ChallengeMod
 		{
 			Item orb = new Item();
 			orb.SetDefaults(mod.ItemType<Items.ChallengeOrb>());
-			orb.stack = 1;
 			items.Add(orb);
 		}
 
@@ -249,6 +251,19 @@ namespace ChallengeMod
 			if (item.thrown && noThrownDmg)
 				return false;
 
+			if (ChallengeMod.thoriumLoaded)
+			{
+				if (item.modItem is ThoriumMod.Items.ThoriumItem)
+				{
+					ThoriumMod.Items.ThoriumItem tProj = (ThoriumMod.Items.ThoriumItem)item.modItem;
+					if (tProj.symphonic && noSymphonicDmg)
+						return false;
+
+					if (tProj.radiant && noRadiantDmg)
+						return false;
+				}
+			}
+
 			return null;
 		}
 
@@ -268,6 +283,19 @@ namespace ChallengeMod
 
 			if (proj.thrown && noThrownDmg)
 				return false;
+
+			if (ChallengeMod.thoriumLoaded)
+			{
+				if (proj.modProjectile is ThoriumMod.ThoriumProjectile)
+				{
+					ThoriumMod.ThoriumProjectile tProj = (ThoriumMod.ThoriumProjectile)proj.modProjectile;
+					if (tProj.symphonic && noSymphonicDmg)
+						return false;
+
+					if (tProj.radiant && noRadiantDmg)
+						return false;
+				}
+			}
 
 			return null;
 		}
